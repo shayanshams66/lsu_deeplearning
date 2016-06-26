@@ -31,6 +31,7 @@ void CharRNNInputLayer::Setup(const LayerProto& conf,
   vocab_path_ = conf.char_rnn_conf().vocab_path();
   unroll_len_ = conf.char_rnn_conf().unroll_len();
   datavec_.clear();
+  //memvec_.clear();
   // each unroll layer has a input blob
   for (int i = 0; i <= unroll_len_; i++) {
     datavec_.push_back(new Blob<float>(batchsize_));

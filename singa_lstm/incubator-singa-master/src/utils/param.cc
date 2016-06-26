@@ -111,9 +111,11 @@ Param* Param::Create(const ParamProto& proto) {
 const vector<int> Param::ComputeSlices(int num, const vector<Param*>& params) {
   // collect sizes of unique Params
   std::vector<int> paramsize;
-  for (auto param : params)
+  for (auto param : params) {
+    //printf("%d\t%d\n", param->id(), param->owner());
     if (param->id() == param->owner())
       paramsize.push_back(param->size());
+  }
   // slice into lcm pieces to achieve good load-balance for both intra-group
   // partition (among servers in a group) and inter-group partition (each group
   // is assgined a sub-set of slices)
@@ -127,11 +129,16 @@ const vector<int> Param::ComputeSlices(int num, const vector<Param*>& params) {
 
 void Param::SliceParams(int num, const vector<Param*>& params) {
   auto slices = ComputeSlices(num, params);
+  //printf("SLICES.SIZE(): %d\n", slices.size());
+  //for (int i = 0; i < slices.size(); i++)
+    //printf("%d\t", slices[i]);
+  //printf("\n");
   // construct map from Param ID to its slices <slice id, len>
   std::unordered_map<int, vector<std::pair<int, int>>> paramid2slices;
   int slice_id = 0;
   auto it = slices.begin();
   for (auto param : params) {
+    //printf("%d\t%d\n", param->id(), param->owner());
     if (param->id() == param->owner()) {
       int len = 0;
       while (len < param->size() && it != slices.end()) {
@@ -149,13 +156,13 @@ void Param::SliceParams(int num, const vector<Param*>& params) {
   for (auto param : params) {
     for (auto entry : paramid2slices[param->owner()]) {
 
-      std::cout << "SliceParams(): id " << param->id() <<  std::endl; // debug !!!!!!!!!!!!!
-      std::cout << "SliceParams(): owner " << param->owner() <<  std::endl; // debug !!!!!!!!!!!!!
-      std::cout << "SliceParams(): first, second " << entry.first << " " << entry.second << std::endl; // debug !!!!!!!!!!!!!
+      //std::cout << "SliceParams(): id " << param->id() <<  std::endl; // debug !!!!!!!!!!!!!
+      //std::cout << "SliceParams(): owner " << param->owner() <<  std::endl; // debug !!!!!!!!!!!!!
+      //std::cout << "SliceParams(): first, second " << entry.first << " " << entry.second << std::endl; // debug !!!!!!!!!!!!!
       
 
       //std::cout << "SliceParams(): slice_start_ " << slice_start() << std::endl; // debug !!!!!!!!!!!!
-      std::cout << "SliceParams(): entry.second " << entry.second << std::endl; // debug !!!!!!!!!!!!
+      //std::cout << "SliceParams(): entry.second " << entry.second << std::endl; // debug !!!!!!!!!!!!
 
 
 
@@ -218,6 +225,7 @@ void Param::ShareFrom(Param* other) {
 
   ShareDataFrom(other, false);
   grad_.ShareData(&(other->grad_), false);
+  //mem_.ShareData(&(other->mem_), false);
 }
 
 void Param::FromProto(const string str) {
@@ -236,23 +244,24 @@ void Param::ToProto(BlobProto* blob) {
 
 void Param::AddSlice(int slice_id, int size) {
 
-  std::cout << "AddSlice():" << slice_id << " " << size << std::endl; // debug !!!!!!!!!!!!!
+  //std::cout << "AddSlice():" << slice_id << " " << size << std::endl; // debug !!!!!!!!!!!!!
   
 
 
   int offset = 0;
-  std::cout << "AddSlice(): slice_size_" << slice_size_.size() << std::endl;
+  //std::cout << "AddSlice(): slice_size_" << slice_size_.size() << std::endl;
   if (slice_size_.size() > 0) {
 
-  std::cout << "AddSlice(): CHECK_EQ slice_start_, num_slices_ " << slice_start_ << " " << num_slices_ << std::endl; // debug !!!!!!!!!!!!!
-  std::cout << "AddSlice(): CHECK_EQ " << slice_start_ + num_slices_ << " " << slice_id << std::endl; // debug !!!!!!!!!!!!!
-    
+  //std::cout << "AddSlice(): CHECK_EQ slice_start_, num_slices_ " << slice_start_ << " " << num_slices_ << std::endl; // debug !!!!!!!!!!!!!
+  //std::cout << "AddSlice(): CHECK_EQ " << slice_start_ + num_slices_ << " " << slice_id << std::endl; // debug !!!!!!!!!!!!!
+    //printf("slice_size: %d\nslice_start: %d\nnum_slices: %d\nslice_id:%d\n", 
+      //slice_size_.size(), slice_start_, num_slices_, slice_id);
     // must be added in order
     CHECK_EQ(slice_start_ + num_slices_, slice_id);
     
 
     offset = slice_offset_.back() + slice_size_.back();
-    std::cout << "AddSlice(): offset " << offset<< std::endl;
+    //std::cout << "AddSlice(): offset " << offset<< std::endl;
 
   } else {
   slice_start_ = slice_id;

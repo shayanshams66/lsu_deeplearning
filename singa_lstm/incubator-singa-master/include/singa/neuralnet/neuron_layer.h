@@ -233,7 +233,7 @@ class LstmLayer : public NeuronLayer {
   }
   const std::vector<Param*> GetParams() const override {
     std::vector<Param*> params{weight_i_hx_, weight_f_hx_, weight_c_hx_, weight_o_hx_,
-      weight_i_hh_, weight_f_hh_, weight_c_hh_, weight_o_hx_};
+      weight_i_hh_, weight_f_hh_, weight_c_hh_, weight_o_hh_};
 
     if (bias_i_ != nullptr && bias_f_ != nullptr && bias_c_ != nullptr && bias_o_ !=nullptr) {
       params.push_back(bias_i_);

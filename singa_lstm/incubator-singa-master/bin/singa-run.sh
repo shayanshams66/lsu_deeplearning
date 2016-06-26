@@ -80,6 +80,7 @@ host_file=$log_dir/job.hosts
 singa_run="$exe $args \
             -singa_conf $SINGA_HOME/conf/singa.conf \
             -singa_job $job_id"
+echo $singa_run > run_command.txt
 # add -conf if exists
 if [ ! -z $job_conf ]; then
   singa_run="$singa_run -conf $job_conf"

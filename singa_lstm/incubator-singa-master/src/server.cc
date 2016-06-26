@@ -84,6 +84,7 @@ void Server::Run() {
     Msg* response = nullptr;
     int type = msg->type();
     int slice_id = SliceID(msg->trgt_val());
+    //printf("SERVER slice_id: %d\n", slice_id);
     if (type == kPut) {
       response = HandlePut(&msg);
     } else if (shard_.find(slice_id) == shard_.end()) {

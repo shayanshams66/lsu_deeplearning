@@ -1,0 +1,1 @@
+./singa -singa_conf /home/shayanshams/Documents/singa/singa_lstm/incubator-singa-master/conf/singa.conf -singa_job 245

@@ -340,6 +340,8 @@ const vector<Worker*> Driver::CreateWorkers(const JobProto& job_conf,
     NeuralNet* train_net = nullptr, *test_net = nullptr, *val_net = nullptr;
     if (gid == gstart) {
       train_net = net;
+      //for (auto param : net->params())
+        //printf("id: %d\towner: %d\tsize: %d\n", param->id(), param->owner(), param->size());
       Param::SliceParams(lcm, train_net->params());
       // test and validation are performed by the 1st group.
       if (gid == 0 && job_conf.test_steps() > 0) {

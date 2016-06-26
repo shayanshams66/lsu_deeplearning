@@ -163,11 +163,16 @@ void GEMM(Dtype alpha, Dtype beta, const Blob<Dtype>& A, const Blob<Dtype>& B,
   int a1, a2, b1, b2, m, n;
   CHECK(!C->transpose());
   a1 = A.transpose() ? A.count() / A.shape(0) : A.shape(0);
+  //printf("a1-mathblob%d\n",a1);//debug
   a2 = A.count() / a1;
   b1 = B.transpose() ? B.count() /B.shape(0) : B.shape(0);
+  //printf("b1-math.blob%d\n",b1);
   b2 = B.count() / b1;
+  //printf("b2-math.blob%d\n",b2);
   m = C->shape(0);
   n = C->count() / m;
+  // printf("m-math.blob%d\n",m);
+  //  printf("n-math.blob%d\n",n);
   CHECK_EQ(a2, b1);
   CHECK_EQ(a1, m);
   CHECK_EQ(b2, n);

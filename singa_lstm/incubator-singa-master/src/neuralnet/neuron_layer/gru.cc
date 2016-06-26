@@ -103,7 +103,7 @@ void GRULayer::Setup(const LayerProto& conf,
 void GRULayer::ComputeFeature(int flag,
     const vector<Layer*>& srclayers) {
   CHECK_LE(srclayers.size(), 2);
-
+  //printf("ComputeFeature\n");
   // Do transpose
   Blob<float> *w_z_hx_t = Transpose(weight_z_hx_->data());
   Blob<float> *w_z_hh_t = Transpose(weight_z_hh_->data());

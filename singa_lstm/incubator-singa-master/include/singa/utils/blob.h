@@ -294,7 +294,7 @@ class Blob {
 
  protected:
   std::shared_ptr<SyncedMemory> data_ = nullptr;
-  std::shared_ptr<SyncedMemory> mem_;
+  std::shared_ptr<SyncedMemory> mem_ = nullptr;
   std::vector<int> shape_;
   int count_ = 0;
   int capacity_ = 0;

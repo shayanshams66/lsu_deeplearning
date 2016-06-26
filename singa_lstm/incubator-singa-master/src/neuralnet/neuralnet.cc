@@ -103,9 +103,11 @@ NeuralNet* NeuralNet::Create(const NetProto& net_conf, Phase phase,
   // Copy shared parameters for sharing param conf
   std::vector<ParamProto*> shares;
   std::unordered_map<string, ParamProto*> name2param;
-  for (int index = 0; index < conf.layer_size(); index++) {
+  //printf("layer_size(): %d\n", conf.layer_size());
+  for (int index = 0; index < conf.layer_size(); index++) {   
     LayerProto* layer = conf.mutable_layer(index);
-    for (int i = 0; i < layer->param_size(); i++) {
+    //printf("\tparam_size(): %d\n", layer->param_size());
+    for (int i = 0; i < layer->param_size(); i++) {    
       ParamProto* param = layer->mutable_param(i);
       CHECK(name2param.find(param->name()) == name2param.end())
         << "Repeated param = " << param->name();
@@ -559,10 +561,15 @@ void NeuralNet::CreateNetFromGraph(Graph* graph) {
     layerinfo[layer->name()] = IntVecToString(layer->data(nullptr).shape());
     for (auto param : layer->GetParams()) {
       param->set_id(paramid++);
+       //printf("%d\n", param->id());
     }
+    //for (auto param : layer->GetParams())
+      //printf("%d\n", param->id());
     if (layer->partition_dim() == 0)
       share_param_layers[node->origin].push_back(layer);
+
   }
+
   // create map from param name to param ptr
   std::unordered_map<string, Param*> name2param;
   for (auto layer : layers_) {
@@ -611,6 +618,7 @@ void NeuralNet::CreateNetFromGraph(Graph* graph) {
         params.at(i)->ShareDataFrom(owner_params.at(i), true);
     }
   }
+
 }
 
 void NeuralNet::PrepareDataStructures() {
